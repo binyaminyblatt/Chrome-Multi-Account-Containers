@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Chrome Multi-Account Containers",
   "version": "1.3.0",
-  "description": "Firefox-style Multi-Account Containers for Chrome with Enterprise Policy support, Temporary Containers, Split View, and storage isolation.",
+  "description": "Firefox-style Multi-Account Containers for Chrome with isolated cookies, storage, Split View, and Temporary Containers.",
   "permissions": [
     "tabs",
     "tabGroups",
