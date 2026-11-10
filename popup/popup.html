@@ -2,213 +2,81 @@
 <html>
 
 <head>
+    <meta charset="utf-8">
     <title>Multi-Account Containers</title>
     <style>
         :root {
             /* Light Mode Defaults */
             --bg-color: #ffffff;
-            --text-color: #333333;
+            --text-color: #20123a;
             --menu-hover: #f0f0f4;
-            --border-color: #e0e0e0;
+            --border-color: #e0e0e6;
             --input-bg: #ffffff;
-            --input-border: #ccc;
+            --input-border: #cccccc;
             --input-focus: #0060df;
-            --section-title: #333;
-            --subtext: #666;
-            --button-bg: #f9f9fa;
+            --section-title: #5b5b66;
+            --subtext: #666670;
+            --button-bg: #f0f0f4;
             --button-hover: #e0e0e6;
-            --button-border: #ccc;
-            --tag-bg: #e0e0e6;
-            --tag-text: #333;
-            --header-bg: #f0f0f4;
+            --button-border: #d7d7db;
+            --tag-bg: #e8e8ee;
+            --tag-text: #33333c;
+            --header-bg: #f9f9fb;
+            --card-bg: #f5f6fa;
         }
 
         @media (prefers-color-scheme: dark) {
             :root {
-                /* Dark Mode Overrides */
-                --bg-color: #38383d;
-                --text-color: #ffffff;
-                --menu-hover: #52525e;
-                --border-color: #5f6066;
-                --input-bg: #4a4a4f;
+                /* Firefox Dark Mode Palette */
+                --bg-color: #2b2a33;
+                --text-color: #fbfbfe;
+                --menu-hover: #42414d;
+                --border-color: #52525e;
+                --input-bg: #42414d;
                 --input-border: #5f6066;
                 --input-focus: #00ddff;
-                --section-title: #f0f0f4;
-                --subtext: #cfcfd8;
-                --button-bg: #4a4a4f;
-                --button-hover: #5a5a5f;
+                --section-title: #cfcfd8;
+                --subtext: #b1b1b9;
+                --button-bg: #42414d;
+                --button-hover: #52525e;
                 --button-border: #5f6066;
-                --tag-bg: #52525e;
-                --tag-text: #cfcfd8;
-                --header-bg: #42414d;
+                --tag-bg: #42414d;
+                --tag-text: #fbfbfe;
+                --header-bg: #1c1b22;
+                --card-bg: #383744;
             }
         }
 
         body {
-            width: 320px;
+            width: 340px;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: var(--bg-color);
             color: var(--text-color);
             overflow-x: hidden;
-        }
-
-        /* Views */
-        .view {
-            transition: transform 0.2s ease-in-out;
+            user-select: none;
         }
 
         .hidden {
-            display: none;
+            display: none !important;
         }
 
-        /* Header & Menus */
-        .menu-list {
-            padding: 5px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .menu-item {
-            padding: 8px 15px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 13px;
-        }
-
-        .menu-item:hover {
-            background-color: var(--menu-hover);
-        }
-
-        .menu-icon {
-            margin-right: 10px;
-            width: 16px;
-            text-align: center;
-        }
-
-        /* Containers Section */
-        .section-title {
-            padding: 10px 15px 5px;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--section-title);
-        }
-
-        .search-container {
-            padding: 0 15px 10px;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 6px 10px;
-            border-radius: 4px;
-            border: 1px solid var(--input-border);
-            background-color: var(--input-bg);
-            color: var(--text-color);
-            box-sizing: border-box;
-        }
-
-        input[type="text"]:focus {
-            outline: 2px solid var(--input-focus);
-            border-color: transparent;
-        }
-
-        .container-list {
-            max-height: 300px;
-            overflow-y: auto;
-            padding-bottom: 5px;
-        }
-
-        /* Shared Item Styles */
-        .container-item {
-            display: flex;
-            align-items: center;
-            padding: 10px 15px;
-            cursor: pointer;
-            border-left: 3px solid transparent;
-        }
-
-        .container-item:hover {
-            background-color: var(--menu-hover);
-        }
-
-        .color-circle {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 12px;
-        }
-
-        .container-name {
-            flex-grow: 1;
-            font-size: 14px;
-        }
-
-        /* Sub-view Header */
-        .sub-header {
-            background-color: var(--header-bg);
-            padding: 12px 15px;
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .sub-back {
-            margin-right: 15px;
-            cursor: pointer;
-            font-size: 18px;
-            line-height: 1;
-        }
-
-        .sub-title {
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        /* Footer */
-        .footer {
-            border-top: 1px solid var(--border-color);
-            padding: 10px;
-        }
-
-        .button-full {
-            width: 100%;
-            padding: 8px;
-            background-color: var(--button-bg);
-            color: var(--text-color);
-            border: 1px solid var(--button-border);
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 13px;
-        }
-
-        .button-full:hover {
-            background-color: var(--button-hover);
-        }
-
-        .credit-link {
-            text-align: center;
-            font-size: 11px;
-            color: var(--subtext);
-            margin-top: 10px;
-            cursor: pointer;
-        }
-
+        /* Persistent Header */
         .header {
-            background-color: #42414d;
-            color: white;
-            padding: 12px 15px;
+            background-color: #1c1b22;
+            color: #fbfbfe;
+            padding: 11px 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 1px solid #5f6066;
+            border-bottom: 1px solid #3a3944;
         }
 
         .header-title {
             font-size: 13px;
             font-weight: 600;
+            letter-spacing: 0.1px;
         }
 
         .header-icon {
@@ -222,9 +90,330 @@
             opacity: 1;
         }
 
+        /* Active Tab Context Banner (Firefox style) */
+        .active-tab-card {
+            margin: 10px 12px 6px;
+            padding: 9px 11px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        .active-tab-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .active-domain {
+            font-weight: 600;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 175px;
+        }
+
+        .active-container-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            background-color: var(--tag-bg);
+            color: var(--tag-text);
+            font-size: 11px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .always-toggle-row {
+            margin-top: 7px;
+            padding-top: 7px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            cursor: pointer;
+            color: var(--subtext);
+            font-size: 11.5px;
+        }
+
+        .always-toggle-row input[type="checkbox"] {
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .active-card-footer {
+            margin-top: 7px;
+            padding-top: 7px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+        }
+
+        .always-toggle-inline {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            color: var(--subtext);
+            font-size: 11.5px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .reset-site-btn {
+            background-color: var(--button-bg);
+            color: var(--text-color);
+            border: 1px solid var(--button-border);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 11px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .reset-site-btn:hover {
+            background-color: var(--button-hover);
+        }
+
+        .tab-count-badge {
+            font-size: 11px;
+            padding: 1px 7px;
+            border-radius: 10px;
+            background-color: var(--tag-bg);
+            color: var(--subtext);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .tab-count-badge:hover {
+            background-color: var(--button-hover);
+            color: var(--text-color);
+        }
+
+        .expanded-tabs-drawer {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 4px 8px 4px 28px;
+        }
+
+        .drawer-tab-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            gap: 6px;
+        }
+
+        .drawer-tab-row:hover {
+            background-color: var(--menu-hover);
+        }
+
+        .drawer-tab-title {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex-grow: 1;
+        }
+
+        /* Menu Section */
+        .menu-list {
+            padding: 4px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .menu-item {
+            padding: 8px 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+        }
+
+        .menu-item:hover {
+            background-color: var(--menu-hover);
+        }
+
+        .menu-icon {
+            display: inline-block;
+            margin-right: 10px;
+            width: 16px;
+            text-align: center;
+            font-weight: 600;
+        }
+
         .arrow {
             color: var(--subtext);
             font-size: 16px;
+        }
+
+        /* Containers Section */
+        .section-title {
+            padding: 9px 14px 5px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--section-title);
+        }
+
+        .search-container {
+            padding: 0 12px 8px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 6px 10px;
+            border-radius: 5px;
+            border: 1px solid var(--input-border);
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            box-sizing: border-box;
+            font-size: 12.5px;
+        }
+
+        input[type="text"]:focus {
+            outline: 2px solid var(--input-focus);
+            border-color: transparent;
+        }
+
+        .container-list {
+            max-height: 270px;
+            overflow-y: auto;
+            padding-bottom: 4px;
+        }
+
+        /* Container Item Row */
+        .container-item {
+            display: flex;
+            align-items: center;
+            padding: 7px 12px;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            gap: 10px;
+        }
+
+        .container-item:hover {
+            background-color: var(--menu-hover);
+        }
+
+        .container-icon-badge {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            flex-shrink: 0;
+            color: #ffffff;
+        }
+
+        .container-name {
+            flex-grow: 1;
+            font-size: 13.5px;
+            font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .tab-count-badge {
+            font-size: 11px;
+            padding: 1px 6px;
+            border-radius: 10px;
+            background-color: var(--tag-bg);
+            color: var(--subtext);
+            font-weight: 600;
+        }
+
+        .row-actions {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .row-action-btn {
+            background: transparent;
+            border: none;
+            color: var(--subtext);
+            cursor: pointer;
+            padding: 3px 5px;
+            border-radius: 4px;
+            font-size: 13px;
+            line-height: 1;
+        }
+
+        .row-action-btn:hover {
+            background-color: var(--button-hover);
+            color: var(--text-color);
+        }
+
+        /* Sub-view Header */
+        .sub-header {
+            background-color: var(--header-bg);
+            padding: 11px 14px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sub-back {
+            margin-right: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .sub-back:hover {
+            background-color: var(--menu-hover);
+        }
+
+        .sub-title {
+            font-weight: 600;
+            font-size: 13.5px;
+        }
+
+        /* Footer */
+        .footer {
+            border-top: 1px solid var(--border-color);
+            padding: 10px 12px;
+        }
+
+        .button-full {
+            width: 100%;
+            padding: 8px;
+            background-color: var(--button-bg);
+            color: var(--text-color);
+            border: 1px solid var(--button-border);
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .button-full:hover {
+            background-color: var(--button-hover);
+        }
+
+        .credit-link {
+            text-align: center;
+            font-size: 11px;
+            color: var(--subtext);
+            margin-top: 8px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -233,51 +422,75 @@
 
     <!-- Persistent Header -->
     <div class="header">
-        <div class="header-title">Chrome Multi-Account Containers</div>
-        <div class="header-icon" id="info-icon" title="Manage Extension">
+        <div class="header-title">Multi-Account Containers</div>
+        <div class="header-icon" id="info-icon" title="Extension Settings">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm0 14.5a6.5 6.5 0 1 1 0-13 6.5 6.5 0 0 1 0 13z" />
-                <path
-                    d="M7.25 4.5a.75.75 0 1 1 1.5 0 .75.75 0 0 1-1.5 0zm.75 3a.75.75 0 0 0-.75.75v3.5a.75.75 0 0 0 1.5 0v-3.5A.75.75 0 0 0 8 7.5z" />
+                <path d="M7.25 4.5a.75.75 0 1 1 1.5 0 .75.75 0 0 1-1.5 0zm.75 3a.75.75 0 0 0-.75.75v3.5a.75.75 0 0 0 1.5 0v-3.5A.75.75 0 0 0 8 7.5z" />
             </svg>
         </div>
     </div>
 
     <!-- MAIN VIEW -->
     <div id="main-view" class="view">
+        <!-- Active Tab Banner -->
+        <div id="active-tab-card" class="active-tab-card hidden">
+            <div class="active-tab-row">
+                <span id="active-domain-text" class="active-domain"></span>
+                <span id="active-container-pill" class="active-container-pill"></span>
+            </div>
+            <div class="active-card-footer">
+                <label id="always-open-label" class="always-toggle-inline">
+                    <input type="checkbox" id="always-open-checkbox">
+                    <span id="always-open-text">Always open in this container</span>
+                </label>
+                <button id="reset-site-btn" class="reset-site-btn hidden" title="Clear cookies & storage for this site only in this container">🧹 Reset Site</button>
+            </div>
+        </div>
+
         <!-- Menu Section -->
         <div class="menu-list">
+            <div class="menu-item" id="menu-temp-tab">
+                <span><span class="menu-icon">&#x1F525;</span> Open Temporary Container</span>
+                <span class="arrow">+</span>
+            </div>
             <div class="menu-item" id="menu-new-tab">
                 <span><span class="menu-icon">+</span> Open New Tab in...</span>
                 <span class="arrow">&rsaquo;</span>
             </div>
+            <div class="menu-item" id="menu-duplicate">
+                <span><span class="menu-icon">&#x29C9;</span> Duplicate This Tab in...</span>
+                <span class="arrow">&rsaquo;</span>
+            </div>
+            <div class="menu-item" id="menu-split">
+                <span><span class="menu-icon">&#x25EB;</span> Split View This Tab in...</span>
+                <span class="arrow">&rsaquo;</span>
+            </div>
             <div class="menu-item" id="menu-reopen">
-                <span><span class="menu-icon">&#x21bb;</span> Reopen This Site in...</span>
+                <span><span class="menu-icon">&#x21bb;</span> Reopen This Tab in...</span>
+                <span class="arrow">&rsaquo;</span>
+            </div>
+            <div class="menu-item" id="menu-always">
+                <span><span class="menu-icon">&#x1F4CC;</span> Always Open This Site in...</span>
                 <span class="arrow">&rsaquo;</span>
             </div>
             <div class="menu-item" id="menu-sort">
                 <span><span class="menu-icon">&#x21c4;</span> Sort Tabs by Container</span>
             </div>
-            <div class="menu-item" id="menu-always">
-                <span><span class="menu-icon">&#x2610;</span> Always Open This Site in...</span>
-                <span class="arrow">&rsaquo;</span>
-            </div>
         </div>
 
-        <!-- Containers Section (Shortcut) -->
+        <!-- Containers Section -->
         <div class="section-title">Containers</div>
         <div class="search-container">
-            <input type="text" id="search-input" placeholder="Search container name">
+            <input type="text" id="search-input" placeholder="Search containers...">
         </div>
 
-        <div id="container-list-main" class="container-list">
-            <!-- Items injected here -->
-        </div>
+        <div id="container-list-main" class="container-list"></div>
 
         <div class="footer">
             <button id="manage-btn" class="button-full">Manage Containers</button>
             <div class="credit-link" id="credit-link">
-                Built by <span style="color: #0060df; text-decoration: underline;">CredShields</span>
+                By <span style="color: #0060df; text-decoration: underline;">Binyamin Blatt</span> &amp; CredShields
             </div>
         </div>
     </div>
@@ -288,9 +501,7 @@
             <div class="sub-back" id="sub-back-btn">&lsaquo;</div>
             <div class="sub-title" id="sub-title-text">Select Container</div>
         </div>
-        <div id="container-list-sub" class="container-list">
-            <!-- Items injected here -->
-        </div>
+        <div id="container-list-sub" class="container-list"></div>
     </div>
 
     <script src="popup.js"></script>

@@ -2,47 +2,54 @@
 <html>
 
 <head>
+    <meta charset="utf-8">
     <title>Manage Containers</title>
     <style>
         :root {
             /* Light Mode */
-            --bg-color: #f9f9f9;
+            --bg-color: #f9f9fb;
             --header-bg: #ffffff;
-            --text-color: #333333;
-            --border-color: #e0e0e0;
+            --text-color: #20123a;
+            --subtext: #666670;
+            --border-color: #e0e0e6;
             --item-bg: #ffffff;
-            --item-hover: #f0f0f0;
+            --item-hover: #f0f0f4;
             --input-bg: #ffffff;
-            --input-border: #ccc;
+            --input-border: #cccccc;
+            --badge-bg: #e8e8ee;
         }
 
         @media (prefers-color-scheme: dark) {
             :root {
-                /* Dark Mode */
+                /* Firefox Dark Mode */
                 --bg-color: #2b2a33;
                 --header-bg: #38383d;
-                --text-color: #f9f9fa;
-                --border-color: #5f6066;
+                --text-color: #fbfbfe;
+                --subtext: #cfcfd8;
+                --border-color: #52525e;
                 --item-bg: #38383d;
-                --item-hover: #52525e;
-                --input-bg: #4a4a4f;
+                --item-hover: #4a4a55;
+                --input-bg: #42414d;
                 --input-border: #5f6066;
+                --badge-bg: #42414d;
             }
         }
 
         body {
-            width: 320px;
+            width: 340px;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: var(--bg-color);
             color: var(--text-color);
+            user-select: none;
         }
 
         .header {
-            padding: 15px;
-            background-color: var(--header-bg);
-            border-bottom: 1px solid var(--border-color);
+            padding: 12px 14px;
+            background-color: #1c1b22;
+            color: #fbfbfe;
+            border-bottom: 1px solid #3a3944;
             display: flex;
             align-items: center;
         }
@@ -51,73 +58,166 @@
             margin-right: 10px;
             cursor: pointer;
             font-size: 18px;
-            color: var(--text-color);
+            color: #fbfbfe;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .back-btn:hover {
+            background-color: #3a3944;
         }
 
         .header h1 {
             margin: 0;
-            font-size: 16px;
+            font-size: 14.5px;
             font-weight: 600;
-            color: var(--text-color);
+        }
+
+        .section-heading {
+            padding: 9px 12px 4px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: var(--subtext);
         }
 
         .list {
-            padding: 10px;
+            padding: 4px 10px 8px;
+            max-height: 165px;
+            overflow-y: auto;
         }
 
         .item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px;
+            padding: 7px 10px;
             background-color: var(--item-bg);
             border-bottom: 1px solid var(--border-color);
             color: var(--text-color);
+            font-size: 13px;
+        }
+
+        .item:first-child {
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
         }
 
         .item:last-child {
             border-bottom: none;
+            border-bottom-left-radius: 6px;
+            border-bottom-right-radius: 6px;
         }
 
         .item-info {
             display: flex;
             align-items: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            gap: 8px;
         }
 
-        .color-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 10px;
+        .site-badge {
+            font-size: 11px;
+            color: var(--subtext);
         }
 
-        .delete-btn {
-            color: #d93025;
+        .icon-badge {
+            width: 22px;
+            height: 22px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #ffffff;
+            flex-shrink: 0;
+        }
+
+        .item-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: none;
+            color: var(--subtext);
             cursor: pointer;
-            font-size: 18px;
+            font-size: 13px;
+            padding: 3px 5px;
+            border-radius: 4px;
+            line-height: 1;
+        }
+
+        .action-btn:hover {
+            background-color: var(--item-hover);
+            color: var(--text-color);
+        }
+
+        .action-btn.delete:hover {
+            color: #ff4f5e;
+        }
+
+        .empty-state {
+            padding: 8px 10px;
+            font-size: 12px;
+            color: var(--subtext);
         }
 
         .add-form {
-            padding: 15px;
+            padding: 12px;
             background-color: var(--header-bg);
             border-top: 1px solid var(--border-color);
         }
 
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            box-sizing: border-box;
-            border: 1px solid var(--input-border);
-            border-radius: 4px;
-            background-color: var(--input-bg);
-            color: var(--text-color);
+        .form-title {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        .color-picker {
+        .cancel-edit {
+            font-size: 11px;
+            color: #0060df;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        input {
+            width: 100%;
+            padding: 7px 9px;
+            margin-bottom: 9px;
+            box-sizing: border-box;
+            border: 1px solid var(--input-border);
+            border-radius: 5px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            font-size: 12.5px;
+        }
+
+        .picker-label {
+            font-size: 11px;
+            color: var(--subtext);
+            margin-bottom: 4px;
+        }
+
+        .color-picker, .icon-picker {
             display: flex;
-            gap: 5px;
-            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 9px;
         }
 
         .color-option {
@@ -130,6 +230,35 @@
 
         .color-option.selected {
             border-color: var(--text-color);
+            transform: scale(1.1);
+        }
+
+        .custom-color-input {
+            width: 24px;
+            height: 24px;
+            padding: 0;
+            margin: 0;
+            border: 1px solid var(--input-border);
+            border-radius: 50%;
+            cursor: pointer;
+            background: transparent;
+        }
+
+        .icon-option {
+            width: 24px;
+            height: 24px;
+            border-radius: 5px;
+            background-color: var(--badge-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .icon-option.selected {
+            border-color: #0060df;
         }
 
         .add-btn {
@@ -137,32 +266,193 @@
             color: white;
             border: none;
             padding: 8px 16px;
-            border-radius: 4px;
-            font-size: 14px;
+            border-radius: 5px;
+            font-size: 13px;
+            font-weight: 600;
             cursor: pointer;
             width: 100%;
+        }
+
+        .add-btn:hover {
+            background-color: #0250bb;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 11.5px;
+            color: var(--subtext);
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .checkbox-row input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .backup-bar {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .secondary-btn {
+            flex: 1;
+            background-color: var(--badge-bg);
+            color: var(--text-color);
+            border: 1px solid var(--input-border);
+            padding: 6px 10px;
+            border-radius: 5px;
+            font-size: 11.5px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .secondary-btn:hover {
+            background-color: var(--item-hover);
+        }
+
+        .add-site-bar {
+            display: flex;
+            gap: 5px;
+            padding: 0 10px 8px;
+            align-items: center;
+        }
+
+        .add-site-bar input {
+            margin-bottom: 0;
+            flex: 1.3;
+            padding: 5px 7px;
+            font-size: 11.5px;
+        }
+
+        .add-site-bar select {
+            flex: 1;
+            padding: 5px;
+            border: 1px solid var(--input-border);
+            border-radius: 5px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            font-size: 11.5px;
+        }
+
+        .add-site-btn {
+            background-color: #0060df;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 9px;
+            font-size: 11.5px;
+            font-weight: 600;
+            cursor: pointer;
+            flex-shrink: 0;
         }
     </style>
 </head>
 
 <body>
     <div class="header">
-        <span class="back-btn">&larr;</span>
+        <span class="back-btn" title="Back">&larr;</span>
         <h1>Manage Containers</h1>
     </div>
+
+    <div class="section-heading">Containers</div>
     <div id="list" class="list"></div>
 
+    <div class="section-heading">Always Open Sites</div>
+    <div class="add-site-bar">
+        <input type="text" id="new-site-domain" placeholder="e.g. *.corp.com or github.com">
+        <select id="new-site-container"></select>
+        <button id="add-site-btn" class="add-site-btn" title="Assign domain or wildcard to container">+ Add</button>
+    </div>
+    <div id="site-list" class="list"></div>
+
     <div class="add-form">
-        <input type="text" id="new-name" placeholder="New Container Name">
-        <div class="color-picker" id="color-picker">
-            <div class="color-option" style="background-color: #37adff" data-color="blue"></div>
-            <div class="color-option" style="background-color: #ff9400" data-color="orange"></div>
-            <div class="color-option" style="background-color: #5b5b5b" data-color="green"></div>
-            <div class="color-option" style="background-color: #ff4bda" data-color="pink"></div>
-            <div class="color-option" style="background-color: #af51f5" data-color="purple"></div>
-            <div class="color-option" style="background-color: #ff0039" data-color="red"></div>
+        <div class="form-title">
+            <span id="form-title-text">New Container</span>
+            <span id="cancel-edit-btn" class="cancel-edit hidden">Cancel Edit</span>
         </div>
+        <input type="text" id="new-name" placeholder="Container Name (e.g. Personal, Dev, Client)">
+        <div class="picker-label">Color</div>
+        <div class="color-picker" id="color-picker">
+            <div class="color-option" style="background-color: #37adff" data-color="blue" title="Blue"></div>
+            <div class="color-option" style="background-color: #1e40af" data-color="navy" title="Navy"></div>
+            <div class="color-option" style="background-color: #38bdf8" data-color="sky" title="Sky Blue"></div>
+            <div class="color-option" style="background-color: #00cbb0" data-color="teal" title="Turquoise"></div>
+            <div class="color-option" style="background-color: #10b981" data-color="mint" title="Mint"></div>
+            <div class="color-option" style="background-color: #2cbe4e" data-color="green" title="Green"></div>
+            <div class="color-option" style="background-color: #84cc16" data-color="lime" title="Lime"></div>
+            <div class="color-option" style="background-color: #eab308" data-color="yellow" title="Yellow"></div>
+            <div class="color-option" style="background-color: #f59e0b" data-color="amber" title="Amber"></div>
+            <div class="color-option" style="background-color: #ff9400" data-color="orange" title="Orange"></div>
+            <div class="color-option" style="background-color: #fb7185" data-color="coral" title="Coral"></div>
+            <div class="color-option" style="background-color: #ff0039" data-color="red" title="Red"></div>
+            <div class="color-option" style="background-color: #be123c" data-color="crimson" title="Crimson"></div>
+            <div class="color-option" style="background-color: #ff4bda" data-color="pink" title="Pink"></div>
+            <div class="color-option" style="background-color: #d946ef" data-color="magenta" title="Magenta"></div>
+            <div class="color-option" style="background-color: #af51f5" data-color="purple" title="Purple"></div>
+            <div class="color-option" style="background-color: #6366f1" data-color="indigo" title="Indigo"></div>
+            <div class="color-option" style="background-color: #475569" data-color="slate" title="Slate"></div>
+            <div class="color-option" style="background-color: #8f8f9d" data-color="grey" title="Grey"></div>
+            <input type="color" id="custom-color-picker" class="custom-color-input" value="#37adff" title="Custom Color">
+        </div>
+        <div class="picker-label">Icon</div>
+        <div class="icon-picker" id="icon-picker">
+            <div class="icon-option" data-icon="fingerprint" title="Fingerprint">🆔</div>
+            <div class="icon-option" data-icon="briefcase" title="Briefcase">💼</div>
+            <div class="icon-option" data-icon="dollar" title="Dollar">💲</div>
+            <div class="icon-option" data-icon="cart" title="Shopping Cart">🛒</div>
+            <div class="icon-option" data-icon="vacation" title="Vacation">✈️</div>
+            <div class="icon-option" data-icon="gift" title="Gift">🎁</div>
+            <div class="icon-option" data-icon="food" title="Food">🍽️</div>
+            <div class="icon-option" data-icon="fruit" title="Fruit">🍎</div>
+            <div class="icon-option" data-icon="pet" title="Pet">🐾</div>
+            <div class="icon-option" data-icon="tree" title="Tree">🌲</div>
+            <div class="icon-option" data-icon="chill" title="Chill">🕶️</div>
+            <div class="icon-option" data-icon="circle" title="Circle">●</div>
+            <div class="icon-option" data-icon="code" title="Dev / Code">💻</div>
+            <div class="icon-option" data-icon="terminal" title="Terminal">⌨️</div>
+            <div class="icon-option" data-icon="robot" title="AI / Bot">🤖</div>
+            <div class="icon-option" data-icon="cloud" title="Cloud">☁️</div>
+            <div class="icon-option" data-icon="lock" title="Lock / Privacy">🔒</div>
+            <div class="icon-option" data-icon="key" title="Key / Admin">🔑</div>
+            <div class="icon-option" data-icon="shield" title="Shield / Security">🛡️</div>
+            <div class="icon-option" data-icon="bank" title="Bank">🏦</div>
+            <div class="icon-option" data-icon="chart" title="Trading / Stocks">📈</div>
+            <div class="icon-option" data-icon="card" title="Credit Card">💳</div>
+            <div class="icon-option" data-icon="mail" title="Email">✉️</div>
+            <div class="icon-option" data-icon="chat" title="Chat / Messaging">💬</div>
+            <div class="icon-option" data-icon="phone" title="Mobile / Social">📱</div>
+            <div class="icon-option" data-icon="globe" title="Web / Global">🌐</div>
+            <div class="icon-option" data-icon="game" title="Gaming">🎮</div>
+            <div class="icon-option" data-icon="music" title="Music">🎵</div>
+            <div class="icon-option" data-icon="video" title="Video / Streaming">🎬</div>
+            <div class="icon-option" data-icon="camera" title="Photo / Design">📷</div>
+            <div class="icon-option" data-icon="book" title="Study / Books">📚</div>
+            <div class="icon-option" data-icon="grad" title="School / University">🎓</div>
+            <div class="icon-option" data-icon="medical" title="Health / Medical">⚕️</div>
+            <div class="icon-option" data-icon="home" title="Home">🏠</div>
+            <div class="icon-option" data-icon="star" title="Star / Favorites">⭐</div>
+            <div class="icon-option" data-icon="fire" title="Fire / Burner">🔥</div>
+        </div>
+        <label class="checkbox-row" title="When enabled, navigating to a non-designated site inside this container automatically opens it in Default">
+            <input type="checkbox" id="isolated-checkbox">
+            <span>🔒 Limit to designated sites only</span>
+        </label>
         <button id="add-btn" class="add-btn">Add Container</button>
+        <div class="backup-bar">
+            <button id="export-btn" class="secondary-btn" title="Export containers and assigned sites to JSON">⬇ Export</button>
+            <button id="import-btn" class="secondary-btn" title="Import containers and assigned sites from JSON">⬆ Import</button>
+            <button id="export-policy-btn" class="secondary-btn" title="Export Chrome Enterprise Managed Policy JSON (for GPO / Intune / MDM)">🏢 Policy JSON</button>
+            <input type="file" id="import-file" accept=".json,application/json" class="hidden">
+        </div>
     </div>
     <script src="manage.js"></script>
 </body>

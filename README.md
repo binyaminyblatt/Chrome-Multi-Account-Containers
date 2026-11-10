@@ -1,87 +1,128 @@
 # Chrome Multi-Account Containers
 
-> **Isolate your online identity. Manage multiple logins. Stay organized.**
-> *A powerful productivity tool for Google Chrome to separate your browsing habits.*
+> **Firefox-Style Multi-Account Containers for Google Chrome.**
+> *Isolate your online identities with encrypted per-container cookie jars, isolated web storage (`localStorage`, `sessionStorage`, `IndexedDB`), Temporary Containers, Split View, and Enterprise Policy management.*
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Version](https://img.shields.io/badge/version-1.0.0-green.svg)
-![Chrome](https://img.shields.io/badge/platform-Chrome-red.svg)
-
-## 📖 Overview
-
-**Chrome Multi-Account Containers** allows you to separate your work, personal, and shopping browsing habits into distinct "Containers". 
-
-Each Container has its own **isolated cookie jar**, meaning you can sign in to two different accounts on the same site (e.g., Gmail, Twitter, AWS) simultaneously in different tabs, without using Incognito mode or different browser profiles. Tabs are visually grouped by color and managed automatically.
+![Version](https://img.shields.io/badge/version-1.3.0-green.svg)
+![Chrome](https://img.shields.io/badge/platform-Chrome%20MV3-red.svg)
 
 ---
 
-## ✨ Features
+## 📖 Overview
 
-- **🍪 True Session Isolation**: Tabs in different containers share no cookies. Log into `Work` email in one tab and `Personal` email in another.
-- **🎨 Visual Organization**: Containers are color-coded and automatically grouped using Chrome's **Tab Groups** feature for easy identification.
-- **📌 Site Assignment**: "Always Open Site in..." lets you bind specific domains (e.g., `bank.com`) to a specific container, ensuring you never accidentally open a sensitive site in the wrong context.
-- **🔄 Session Management**:
-  - **Open New Tab in...**: Quickly spawn isolated tabs for specific contexts.
-  - **Reopen in Container**: Move existing tabs to a secure container instantly.
-  - **Sort Tabs**: Automatically organize your workspace by container group.
-- **🌗 Dark Mode Support**: Fully adaptive UI that respects your system theme.
+**Chrome Multi-Account Containers** lets you separate your work, personal, banking, development, and disposable browsing sessions into color-coded **Containers**—just like Firefox Multi-Account Containers.
+
+Each container maintains its own **AES-256-GCM encrypted cookie jar** (scoped by registrable domain / eTLD+1 so multi-subdomain logins like `accounts.google.com` → `mail.google.com` work seamlessly) alongside isolated `localStorage`, `sessionStorage`, `IndexedDB`, `CacheStorage`, and `BroadcastChannel` namespaces.
+
+---
+
+## ✨ Key Features
+
+- **🍪 Deep Session & Storage Isolation**:
+  - **Registrable-Domain (eTLD+1) Cookie Isolation**: Sign into multiple accounts on Google, Microsoft 365, AWS, GitHub, and other multi-subdomain sites simultaneously.
+  - **AES-256-GCM Encryption at Rest**: Inactive container cookie snapshots are encrypted in `chrome.storage.local` using the Web Crypto API (`crypto.subtle`).
+  - **Network-Layer Background Leak Prevention**: Uses `chrome.declarativeNetRequest` session rules to prevent inactive background tabs in other containers from sending or overwriting the active container's cookies.
+  - **Isolated Web Storage**: Isolates `localStorage`, `sessionStorage`, `IndexedDB`, `CacheStorage`, and `BroadcastChannel` per container in the page's main world (including `Storage.prototype` and `about:blank` iframe hardening).
+- **🔥 Temporary / Burner Containers**:
+  - Spawn disposable `Temp #N` containers with a single click or hotkey. When the last tab in a Temporary Container is closed, its container, cookies, and storage are automatically destroyed.
+- **◫ Side-by-Side Split View & Instant Hover/Scroll Switching**:
+  - Tile your current tab on the left 50% of your screen and open a target container on the right 50% in one click. Moving your cursor into or scrolling either pane immediately activates that pane's container cookies.
+- **📌 Site Assignments, Wildcards & Strict Mode**:
+  - **Always Open This Site in...**: Bind specific domains (`github.com`) or wildcard patterns (`*.corp.example.com`) to a container.
+  - **🔒 Limit to Designated Sites**: Optional strict mode per container that automatically opens non-designated external links back in the `Default` container.
+  - **Smart OAuth / SSO Protection**: Child OAuth popups (*"Sign in with Google / Microsoft / GitHub"*) remain inside the container that initiated the login.
+- **🎨 Visual Organization & Tab Group Sync**:
+  - **36 Icons & 19 Preset Colors + Custom Hex Picker**: Customize every container's look.
+  - **Two-Way Chrome Tab Group Integration**: Container tabs are automatically grouped by container. Dragging a tab into a container's Tab Group assigns it to that container and reloads its session; dragging it out converts it back to `Default`.
+  - **Click Tab Count (`3 ▾`) Drawer**: Expand any container in the popup to view, jump to, or close individual open tabs.
+- **🏢 Enterprise Policy Support (`chrome.storage.managed`)**:
+  - Deploy pre-configured, locked containers and domain/wildcard rules across an organization via Windows Group Policy (GPO), Microsoft Intune, Jamf, or Google Admin Console.
+
+---
+
+## ⌨️ Keyboard Shortcuts
+
+Customize these anytime at `chrome://extensions/shortcuts`:
+
+| Action | Default Shortcut |
+| :--- | :--- |
+| Open Multi-Account Containers Popup | `Alt + Shift + C` |
+| Open a New **Temporary Container** Tab | `Alt + Shift + T` |
+| Reopen Current Tab in a **Temporary Container** | `Alt + Shift + R` |
+| Duplicate Current Tab in a **Temporary Container** | `Alt + Shift + D` |
 
 ---
 
 ## 🚀 Installation
 
-### Manual Installation (Developer Mode)
 1. Clone this repository:
    ```bash
-   git clone https://github.com/Credshields/Chrome-Multi-Account-Containers.git
+   git clone https://github.com/binyaminyblatt/Chrome-Multi-Account-Containers.git
    ```
 2. Open Chrome and navigate to `chrome://extensions/`.
-3. Enable **Developer mode** (toggle in top-right).
-4. Click **Load unpacked**.
-5. Select the `chrome-multi-account-containers` folder from this repository.
+3. Enable **Developer mode** (top-right toggle).
+4. Click **Load unpacked** and select the repository folder.
 
 ---
 
-## 🛠 Usage
+## 🏢 Enterprise Policy Deployment (`schema.json`)
 
-1. **Click the Extension Icon**:
-   - Select a Container (e.g., "Personal", "Work") to open a new isolated tab.
-   - Use the menu to **"Always Open This Site in..."** to assign a domain permanently.
-2. **Manage Containers**:
-   - Go to "Manage Containers" to create custom containers (e.g., "Side Project", "Shopping") with custom colors and icons.
-3. **Tab Groups**:
-   - All tabs in a container are automatically grouped. Closing the visual group closes all contained tabs, keeping your workspace clean.
+IT administrators can pre-configure and enforce containers and domain rules using Chrome's managed storage policy ([`schema.json`](schema.json)).
+
+### Generating a Policy File
+1. Open the extension popup → **Manage Containers**.
+2. Create your organization's containers and wildcard domain rules (`*.internal.company.com`).
+3. Click **🏢 Policy JSON** at the bottom of **Manage Containers** to download `chrome-enterprise-container-policy.json`.
+
+### Example Policy JSON
+```json
+{
+  "containers": [
+    {
+      "id": "corp-sso",
+      "name": "Corporate SSO",
+      "color": "navy",
+      "icon": "shield",
+      "isolated": true
+    },
+    {
+      "id": "aws-prod",
+      "name": "AWS Production",
+      "color": "orange",
+      "icon": "cloud",
+      "isolated": false
+    }
+  ],
+  "siteAssignments": [
+    {
+      "domain": "*.corp.example.com",
+      "containerId": "corp-sso"
+    },
+    {
+      "domain": "*.console.aws.amazon.com",
+      "containerId": "aws-prod"
+    }
+  ],
+  "disableTemporaryContainers": false,
+  "allowUserContainers": true
+}
+```
+
+### Deploying the Policy
+- **Google Admin Console**: Navigate to *Devices → Chrome → Apps & extensions → Users & browsers*, select the extension, and paste the JSON under **Policy for extensions**.
+- **Windows Registry / GPO**: Place the policy values under:
+  ` HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Google\Chrome\3rdparty\extensions\<EXTENSION_ID>\policy`
+- **macOS (Jamf / MDM)**: Deploy a configuration profile targeting `com.google.Chrome.extensions.<EXTENSION_ID>`.
 
 ---
-
-## 🏗 Architecture
-
-This extension leverages modern Chrome APIs to deliver robust isolation:
-
-1. **Virtual Containers**: Container states are managed securely in `chrome.storage.local`.
-2. **Cookie Swapping**: When you switch tabs, the background service worker snapshots the current cookies and harmoniously swaps them for the target container's cookies.
-3. **Tab Groups**: Visual indication is handled via the native `chrome.tabGroups` API to provide a seamless user experience.
-
-> **Note**: Cookies are swapped globally for the active window to maintain session state. Background requests in inactive tabs *may* momentarily use the active tab's cookies. This design is optimized for productivity and session management.
-
----
-
-## 🤝 Contributing
-
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
-
-1. Fork the project.
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`).
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
-4. Push to the branch (`git push origin feature/AmazingFeature`).
-5. Open a Pull Request.
 
 ## 📄 License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information.
 
 ---
 
 <div align="center">
-  Built by <a href="https://credshields.com">CredShields</a>
+  Maintained by <a href="https://github.com/binyaminyblatt">Binyamin Blatt</a> (Originally built by <a href="https://credshields.com">CredShields</a>)
 </div>

@@ -1,24 +1,28 @@
 # Privacy Policy for Chrome Multi-Account Containers
 
-**Last Updated:** February 18, 2026
+**Last Updated:** November 10, 2026
 
 ## 1. Data Collection
-**We do not collect, store, or transmit any of your personal data.** 
+**We do not collect, transmit, rent, or sell any of your personal or browsing data.**
 
-The "Chrome Multi-Account Containers" extension is designed to be privacy-first. All processing happens locally on your device. We do not have servers, and we do not use third-party analytics scripts (such as Google Analytics).
+The **Chrome Multi-Account Containers** extension runs 100% locally on your device. We do not operate backend servers, and we do not include any third-party analytics, telemetry, or tracking scripts.
 
-## 2. Permissions & Usage
+## 2. Permissions & How They Are Used
 
-To function correctly, the extension requires certain permissions. Here is how they are used:
+To isolate browsing sessions across containers, the extension requests the following Chrome permissions:
 
-*   **Read and modify your data on all websites (`<all_urls>`)**: This is strictly used to verify which "Container" a tab belongs to, and to swap authentication cookies accordingly. We do not track your browsing history.
-*   **Cookies**: Used to manage separate login sessions for different containers. Cookies are stored locally on your device and are never sent to us.
-*   **Storage**: Used to save your container preferences (colors, names, and site assignments) locally in your browser.
+* **`<all_urls>` (Host Permission)**: Required to swap domain cookies when switching between container tabs and to inject per-container web storage isolation (`localStorage`, `sessionStorage`, `IndexedDB`, `CacheStorage`) before page scripts execute.
+* **`cookies`**: Used to snapshot, clear, and restore domain cookies when switching between containers. Inactive cookie snapshots are encrypted locally at rest using AES-256-GCM (`crypto.subtle`) and never leave your browser.
+* **`storage` & `unlimitedStorage`**: Used to store your container configurations, site-to-container assignments, and encrypted container cookie jars locally in `chrome.storage.local`, as well as reading optional organization configurations from `chrome.storage.managed`.
+* **`tabs` & `tabGroups`**: Used to associate tabs with containers, visually organize container tabs into color-coded Chrome Tab Groups, and support Split View and window management.
+* **`webNavigation` & `scripting`**: Used to detect navigation commits at the earliest possible stage (`injectImmediately: true`) so `localStorage`, `sessionStorage`, `IndexedDB`, and `BroadcastChannel` are isolated per container, and to detect pane focus/scroll interactions in Split View.
+* **`declarativeNetRequest`**: Used exclusively to apply session-scoped rules that prevent inactive background tabs in other containers from leaking or overwriting the active container's `Cookie` and `Set-Cookie` headers.
+* **`contextMenus`**: Used to provide right-click menu options (*"Open Link in New Container Tab"*, *"Duplicate This Tab in Container"*, *"Split View This Tab in Container"*, and *"Reopen This Tab in Container"*).
 
 ## 3. Third-Party Services
-This extension does not integrate with any third-party services that track you.
+This extension does not communicate with any external or third-party servers.
 
 ## 4. Contact
-The source code for this extension is open source and available for audit at [https://github.com/Credshields/Chrome-Multi-Account-Containers](https://github.com/Credshields/Chrome-Multi-Account-Containers).
+The source code for this extension is open source and available for audit at [https://github.com/binyaminyblatt/Chrome-Multi-Account-Containers](https://github.com/binyaminyblatt/Chrome-Multi-Account-Containers).
 
-If you have any questions, you can open an issue on our GitHub repository.
+If you have any questions, please open an issue on our GitHub repository.

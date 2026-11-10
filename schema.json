@@ -1,0 +1,65 @@
+{
+  "type": "object",
+  "properties": {
+    "containers": {
+      "title": "Enterprise Managed Containers",
+      "description": "List of containers pre-configured and enforced by enterprise policy.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the container (e.g. 'corp-work')."
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name of the container (e.g. 'Corporate SSO')."
+          },
+          "color": {
+            "type": "string",
+            "description": "Container color name (blue, navy, sky, teal, mint, green, lime, yellow, amber, orange, coral, red, crimson, pink, magenta, purple, indigo, slate, grey) or #RRGGBB hex code."
+          },
+          "icon": {
+            "type": "string",
+            "description": "Container icon key (e.g. briefcase, shield, lock, cloud, code, bank, fingerprint)."
+          },
+          "isolated": {
+            "type": "boolean",
+            "description": "If true, limits this container strictly to its designated sites and opens non-designated sites in Default."
+          }
+        },
+        "required": ["id", "name"]
+      }
+    },
+    "siteAssignments": {
+      "title": "Enterprise Site-to-Container Assignments",
+      "description": "List of domain or wildcard rules (e.g. '*.corp.example.com') mapped to a target container ID.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "description": "Exact hostname (e.g. 'mail.google.com') or wildcard pattern (e.g. '*.internal.company.com')."
+          },
+          "containerId": {
+            "type": "string",
+            "description": "Target container ID to open matching URLs in."
+          }
+        },
+        "required": ["domain", "containerId"]
+      }
+    },
+    "disableTemporaryContainers": {
+      "title": "Disable Temporary Containers",
+      "description": "If true, disables disposable Temporary/Burner containers.",
+      "type": "boolean"
+    },
+    "allowUserContainers": {
+      "title": "Allow User-Created Containers",
+      "description": "If false, prevents users from creating or deleting custom containers.",
+      "type": "boolean"
+    }
+  }
+}
